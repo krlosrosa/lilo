@@ -76,7 +76,7 @@ export const TableUnidades: React.FC<TableUnidadesProps> = ({ data, ariaLabel = 
                     cellValue = "";
                   } else if (col.key === "address" && cellValue) {
                     cellValue = String(cellValue).substring(0, 10);
-                  } else if ((col.key === "dataMinima" || col.key === "dataMaxima") && cellValue) {
+                  } else if ((col.key === "dataMinima" || col.key === "dataMaxima" || col.key === "manufacturingDate") && cellValue) {
                     cellValue = formatDate(cellValue);
                   } else if (cellValue !== undefined && cellValue !== null && typeof cellValue === "object") {
                     cellValue = JSON.stringify(cellValue);

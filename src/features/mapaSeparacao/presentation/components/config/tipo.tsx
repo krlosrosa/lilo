@@ -8,6 +8,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { produce } from "immer";
 import { Input } from "@/components/ui/input";
 import { Plus, Trash2, X, Settings, Users, Truck, UserCheck, ChevronDown, ChevronRight, Package } from "lucide-react";
+import { UploadClientesSegregados } from "../mapa/configImpressao/uploadSegreged";
 
 type Props = {
   config: PropsConfig
@@ -170,8 +171,8 @@ export function TipoConfig({ config, setConfig }: Props) {
               ({groups.length} grupo{groups.length !== 1 ? 's' : ''})
             </span>
           </div>
-          {isOpen ? 
-            <ChevronDown className="w-4 h-4" /> : 
+          {isOpen ?
+            <ChevronDown className="w-4 h-4" /> :
             <ChevronRight className="w-4 h-4" />
           }
         </button>
@@ -186,10 +187,10 @@ export function TipoConfig({ config, setConfig }: Props) {
                 onKeyPress={(e) => e.key === 'Enter' && localNewGroupName.trim() && handleAddGroup(config, localNewGroupName, groupType)}
                 className="flex-1"
               />
-              <Button 
-                size="sm" 
-                variant="outline" 
-                onClick={() => { handleAddGroup(config, localNewGroupName, groupType); clearLocalNewGroupName(groupType); }} 
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => { handleAddGroup(config, localNewGroupName, groupType); clearLocalNewGroupName(groupType); }}
                 disabled={!localNewGroupName.trim()}
               >
                 <Plus className="w-4 h-4" />
@@ -285,9 +286,9 @@ export function TipoConfig({ config, setConfig }: Props) {
             <Settings className="w-4 h-4" />
             Tipo de Configuração
           </Label>
-          <RadioGroup 
-            className="grid grid-cols-2 gap-3" 
-            value={safeConfig.tipo} 
+          <RadioGroup
+            className="grid grid-cols-2 gap-3"
+            value={safeConfig.tipo}
             onValueChange={toggleTipo}
           >
             <div className="flex items-center space-x-2 p-3 border rounded-lg hover:bg-muted/50 transition-colors">
@@ -307,7 +308,7 @@ export function TipoConfig({ config, setConfig }: Props) {
         {safeConfig.tipo === 'transport' && (
           <>
             <Separator />
-            
+
             {/* Segregação de Clientes - Colapsável */}
             <div className="space-y-3">
               <button
@@ -321,12 +322,12 @@ export function TipoConfig({ config, setConfig }: Props) {
                     ({(safeConfig.segregedClients || []).length} cliente{(safeConfig.segregedClients || []).length !== 1 ? 's' : ''})
                   </span>
                 </div>
-                {isSegregationOpen ? 
-                  <ChevronDown className="w-4 h-4" /> : 
+                {isSegregationOpen ?
+                  <ChevronDown className="w-4 h-4" /> :
                   <ChevronRight className="w-4 h-4" />
                 }
               </button>
-              
+
               {isSegregationOpen && (
                 <div className="space-y-3 ml-4 pl-3 border-l-2 border-primary/20">
                   <div className="flex items-center gap-2">
@@ -337,19 +338,19 @@ export function TipoConfig({ config, setConfig }: Props) {
                       onKeyPress={(e) => e.key === 'Enter' && newSegregedClient.trim() && handleAddSegregedClient()}
                       className="flex-1"
                     />
-                    <Button 
-                      size="sm" 
-                      variant="outline" 
-                      onClick={handleAddSegregedClient} 
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={handleAddSegregedClient}
                       disabled={!newSegregedClient.trim()}
                     >
                       <Plus className="w-4 h-4" />
                     </Button>
                   </div>
 
-                  {safeConfig.segregedClients.length > 0 && (
+                  {safeConfig.segregedClients?.length > 0 && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      {safeConfig.segregedClients.map((client, index) => (
+                      {(safeConfig.segregedClients || []).map((client, index) => (
                         <div key={index} className="flex items-center justify-between bg-muted/50 p-2 rounded border">
                           <span className="text-sm truncate">{client}</span>
                           <Button
@@ -364,6 +365,17 @@ export function TipoConfig({ config, setConfig }: Props) {
                       ))}
                     </div>
                   )}
+
+                  {/* Upload de arquivo Excel */}
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                      <span className="text-sm font-medium text-foreground">Upload em lote</span>
+                    </div>
+                    <div className="pl-4">
+                      <UploadClientesSegregados />
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
@@ -396,7 +408,7 @@ export function TipoConfig({ config, setConfig }: Props) {
         {safeConfig.tipo === 'customerCode' && (
           <>
             <Separator />
-            
+
             {renderGroupManagement(
               'clientes',
               'Agrupamento de Clientes',
