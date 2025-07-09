@@ -45,3 +45,6 @@ src/features/mapaSeparacao/data/mocks/
 src/features/mapaSeparacao/data/__tests__/
 *.spec.ts
 *.test.ts
+
+# Sentry Config File
+.env.sentry-build-plugin

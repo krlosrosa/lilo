@@ -250,6 +250,7 @@ export default function MapaSeparacao({ validateProducts, validateRoutes, genera
             </CardContent>
           </Card>
         </TabsContent>
+
         <TabsContent value="mapa" className="space-y-4">
           <Card>
             <CardHeader>

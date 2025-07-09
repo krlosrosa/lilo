@@ -37,8 +37,10 @@ export function TipoConfig({ config, setConfig }: Props) {
     maxLine: 10,
   };
 
-  const [newGroupName, setNewGroupName] = useState<string>('');
-  const [newItemName, setNewItemName] = useState<string>('');
+  // Estados para nomes de novos grupos e itens, por tipo de grupo
+  const [newGroupNames, setNewGroupNames] = useState<{ [key: string]: string }>({});
+  const [newItemNames, setNewItemNames] = useState<{ [key: string]: string }>({});
+
   const [newSegregedClient, setNewSegregedClient] = useState<string>('');
   const [isSegregationOpen, setIsSegregationOpen] = useState<boolean>(false);
   const [isGroupingOpen, setIsGroupingOpen] = useState<boolean>(false);
@@ -78,7 +80,6 @@ export function TipoConfig({ config, setConfig }: Props) {
         group.items.push(itemName.trim());
       }
     }));
-    setNewItemName('');
   };
 
   const handleUpdateGroupName = (groupId: string, newName: string, groupType: 'transportes' | 'clientes' | 'remessas') => {
@@ -126,7 +127,21 @@ export function TipoConfig({ config, setConfig }: Props) {
         });
       })
     )
-    setNewGroupName('');
+  };
+
+  const handleLocalNewGroupNameChange = (groupType: string, value: string) => {
+    setNewGroupNames((prev) => ({ ...prev, [groupType]: value }));
+  };
+  const handleLocalNewItemNameChange = (groupType: string, value: string) => {
+    setNewItemNames((prev) => ({ ...prev, [groupType]: value }));
+  };
+  const getLocalNewGroupName = (groupType: string) => newGroupNames[groupType] || "";
+  const getLocalNewItemName = (groupType: string) => newItemNames[groupType] || "";
+  const clearLocalNewGroupName = (groupType: string) => {
+    setNewGroupNames((prev) => ({ ...prev, [groupType]: "" }));
+  };
+  const clearLocalNewItemName = (groupType: string) => {
+    setNewItemNames((prev) => ({ ...prev, [groupType]: "" }));
   };
 
   const renderGroupManagement = (
@@ -139,8 +154,8 @@ export function TipoConfig({ config, setConfig }: Props) {
     setIsOpen: (open: boolean) => void
   ) => {
     const groups = safeConfig[groupType] || [];
-    const [localNewGroupName, setLocalNewGroupName] = useState<string>('');
-    const [localNewItemName, setLocalNewItemName] = useState<string>('');
+    const localNewGroupName = getLocalNewGroupName(groupType);
+    const localNewItemName = getLocalNewItemName(groupType);
 
     return (
       <div className="space-y-3">
@@ -167,14 +182,14 @@ export function TipoConfig({ config, setConfig }: Props) {
               <Input
                 placeholder="Nome do grupo"
                 value={localNewGroupName}
-                onChange={(e) => setLocalNewGroupName(e.target.value)}
+                onChange={(e) => handleLocalNewGroupNameChange(groupType, e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && localNewGroupName.trim() && handleAddGroup(config, localNewGroupName, groupType)}
                 className="flex-1"
               />
               <Button 
                 size="sm" 
                 variant="outline" 
-                onClick={() => handleAddGroup(config, localNewGroupName, groupType)} 
+                onClick={() => { handleAddGroup(config, localNewGroupName, groupType); clearLocalNewGroupName(groupType); }} 
                 disabled={!localNewGroupName.trim()}
               >
                 <Plus className="w-4 h-4" />
@@ -207,14 +222,14 @@ export function TipoConfig({ config, setConfig }: Props) {
                         <Input
                           placeholder={placeholder}
                           value={localNewItemName}
-                          onChange={(e) => setLocalNewItemName(e.target.value)}
+                          onChange={(e) => handleLocalNewItemNameChange(groupType, e.target.value)}
                           onKeyPress={(e) => e.key === 'Enter' && localNewItemName.trim() && handleAddItemToGroup(config, group.id, localNewItemName, groupType)}
                           className="flex-1 bg-background h-8"
                         />
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => handleAddItemToGroup(config, group.id, localNewItemName, groupType)}
+                          onClick={() => { handleAddItemToGroup(config, group.id, localNewItemName, groupType); clearLocalNewItemName(groupType); }}
                           disabled={!localNewItemName.trim()}
                           className="h-8 px-2"
                         >
@@ -303,7 +318,7 @@ export function TipoConfig({ config, setConfig }: Props) {
                   <UserCheck className="w-4 h-4 text-orange-600 dark:text-orange-400" />
                   <Label className="text-base font-medium cursor-pointer">Segregação de Clientes</Label>
                   <span className="text-xs text-muted-foreground">
-                    ({safeConfig.segregedClients.length} cliente{safeConfig.segregedClients.length !== 1 ? 's' : ''})
+                    ({(safeConfig.segregedClients || []).length} cliente{(safeConfig.segregedClients || []).length !== 1 ? 's' : ''})
                   </span>
                 </div>
                 {isSegregationOpen ? 

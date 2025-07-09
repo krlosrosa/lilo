@@ -58,7 +58,11 @@ export const useConfigPrintStore = create<ConfigPrintStore>()(
     }),
     {
       name: 'config-print-storage',
-      partialize: (state) => ({ config: state.config }),
+      partialize: (state) => {
+        // Remove campos que não devem ser persistidos
+        const { transportes, segregedClients, remessas, clientes, ...restConfig } = state.config;
+        return { config: restConfig };
+      },
     }
   )
 );

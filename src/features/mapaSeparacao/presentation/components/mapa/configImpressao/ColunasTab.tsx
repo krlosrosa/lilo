@@ -74,33 +74,33 @@ const SortableColumnItem: React.FC<SortableColumnItemProps> = ({ column, onToggl
     <div
       ref={setNodeRef}
       style={style}
-      className={`flex items-center justify-between p-3 rounded-lg border bg-gray-50/50 hover:bg-gray-100/50 transition-all duration-200 ${
-        isDragging ? 'opacity-50 shadow-lg scale-105 bg-blue-50 border-blue-300' : ''
+      className={`flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-accent/50 transition-all duration-200 ${
+        isDragging ? 'opacity-50 shadow-lg scale-105 bg-primary/10 border-primary' : ''
       }`}
       {...attributes}
     >
       <div className="flex items-center gap-3">
         <div
           {...listeners}
-          className="cursor-grab active:cursor-grabbing hover:bg-gray-200 p-1 rounded transition-colors"
+          className="cursor-grab active:cursor-grabbing hover:bg-accent p-1 rounded transition-colors"
           title="Arrastar para reordenar"
         >
-          <GripVertical className="w-4 h-4 text-gray-400 hover:text-gray-600" />
+          <GripVertical className="w-4 h-4 text-muted-foreground hover:text-foreground" />
         </div>
         <div className="flex items-center gap-2">
           {column.visible ? (
             <Eye className="w-4 h-4 text-green-600" />
           ) : (
-            <EyeOff className="w-4 h-4 text-gray-400" />
+            <EyeOff className="w-4 h-4 text-muted-foreground" />
           )}
-          <span className={`font-medium ${column.visible ? 'text-gray-900' : 'text-gray-500'}`}>
+          <span className={`font-medium ${column.visible ? 'text-foreground' : 'text-muted-foreground'}`}>
             {column.label}
           </span>
         </div>
       </div>
       
       <div className="flex items-center gap-3">
-        <span className="text-xs text-gray-500 min-w-[60px]">
+        <span className="text-xs text-muted-foreground min-w-[60px]">
           Ordem: {column.order + 1}
         </span>
         <Switch
@@ -160,8 +160,8 @@ const ColumnConfigSection: React.FC<ColumnConfigSectionProps> = ({
       </CardHeader>
       <CardContent className="space-y-3">
         {isDragging && (
-          <div className="text-xs text-blue-600 font-medium mb-2 flex items-center gap-2">
-            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+          <div className="text-xs text-primary font-medium mb-2 flex items-center gap-2">
+            <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
             Reordenando colunas...
           </div>
         )}
@@ -228,18 +228,17 @@ export const ColunasTab: React.FC<ColunasTabProps> = ({ config, setConfig }) => 
       const oldIndex = filteredColumns.findIndex(col => col.key === active.id);
       const newIndex = filteredColumns.findIndex(col => col.key === over?.id);
       
-      const newColumns = arrayMove(filteredColumns, oldIndex, newIndex).map((col, index) => ({
-        ...col,
-        order: index
-      }));
-      
-      // Manter as colunas não filtradas e atualizar apenas as filtradas
-      const finalColumns = pickingColumns.map(col => {
-        const foundCol = newColumns.find(newCol => newCol.key === col.key);
-        return foundCol || col;
-      });
-      
-      pickingActions.updateColumnOrder(finalColumns);
+      if (oldIndex !== -1 && newIndex !== -1) {
+        const newFilteredColumns = arrayMove(filteredColumns, oldIndex, newIndex);
+        
+        // Mapear de volta para o array completo, preservando a ordem das colunas filtradas
+        const newColumns = pickingColumns.map(col => {
+          const foundCol = newFilteredColumns.find(newCol => newCol.key === col.key);
+          return foundCol || col;
+        });
+        
+        pickingActions.updateColumnOrder(newColumns);
+      }
     }
   };
 
@@ -251,18 +250,17 @@ export const ColunasTab: React.FC<ColunasTabProps> = ({ config, setConfig }) => 
       const oldIndex = filteredColumns.findIndex(col => col.key === active.id);
       const newIndex = filteredColumns.findIndex(col => col.key === over?.id);
       
-      const newColumns = arrayMove(filteredColumns, oldIndex, newIndex).map((col, index) => ({
-        ...col,
-        order: index
-      }));
-      
-      // Manter as colunas não filtradas e atualizar apenas as filtradas
-      const finalColumns = fifoColumns.map(col => {
-        const foundCol = newColumns.find(newCol => newCol.key === col.key);
-        return foundCol || col;
-      });
-      
-      fifoActions.updateColumnOrder(finalColumns);
+      if (oldIndex !== -1 && newIndex !== -1) {
+        const newFilteredColumns = arrayMove(filteredColumns, oldIndex, newIndex);
+        
+        // Mapear de volta para o array completo, preservando a ordem das colunas filtradas
+        const newColumns = fifoColumns.map(col => {
+          const foundCol = newFilteredColumns.find(newCol => newCol.key === col.key);
+          return foundCol || col;
+        });
+        
+        fifoActions.updateColumnOrder(newColumns);
+      }
     }
   };
 
@@ -274,18 +272,17 @@ export const ColunasTab: React.FC<ColunasTabProps> = ({ config, setConfig }) => 
       const oldIndex = filteredColumns.findIndex(col => col.key === active.id);
       const newIndex = filteredColumns.findIndex(col => col.key === over?.id);
       
-      const newColumns = arrayMove(filteredColumns, oldIndex, newIndex).map((col, index) => ({
-        ...col,
-        order: index
-      }));
-      
-      // Manter as colunas não filtradas e atualizar apenas as filtradas
-      const finalColumns = palletColumns.map(col => {
-        const foundCol = newColumns.find(newCol => newCol.key === col.key);
-        return foundCol || col;
-      });
-      
-      palletActions.updateColumnOrder(finalColumns);
+      if (oldIndex !== -1 && newIndex !== -1) {
+        const newFilteredColumns = arrayMove(filteredColumns, oldIndex, newIndex);
+        
+        // Mapear de volta para o array completo, preservando a ordem das colunas filtradas
+        const newColumns = palletColumns.map(col => {
+          const foundCol = newFilteredColumns.find(newCol => newCol.key === col.key);
+          return foundCol || col;
+        });
+        
+        palletActions.updateColumnOrder(newColumns);
+      }
     }
   };
 
@@ -297,40 +294,39 @@ export const ColunasTab: React.FC<ColunasTabProps> = ({ config, setConfig }) => 
       const oldIndex = filteredColumns.findIndex(col => col.key === active.id);
       const newIndex = filteredColumns.findIndex(col => col.key === over?.id);
       
-      const newColumns = arrayMove(filteredColumns, oldIndex, newIndex).map((col, index) => ({
-        ...col,
-        order: index
-      }));
-      
-      // Manter as colunas não filtradas e atualizar apenas as filtradas
-      const finalColumns = unidadesColumns.map(col => {
-        const foundCol = newColumns.find(newCol => newCol.key === col.key);
-        return foundCol || col;
-      });
-      
-      unidadesActions.updateColumnOrder(finalColumns);
+      if (oldIndex !== -1 && newIndex !== -1) {
+        const newFilteredColumns = arrayMove(filteredColumns, oldIndex, newIndex);
+        
+        // Mapear de volta para o array completo, preservando a ordem das colunas filtradas
+        const newColumns = unidadesColumns.map(col => {
+          const foundCol = newFilteredColumns.find(newCol => newCol.key === col.key);
+          return foundCol || col;
+        });
+        
+        unidadesActions.updateColumnOrder(newColumns);
+      }
     }
   };
 
   return (
     <div className="space-y-4">
       <div className="border-b pb-3">
-        <h3 className="text-lg font-semibold text-gray-900">Configuração de Colunas</h3>
-        <p className="text-sm text-gray-600">Configure quais colunas serão exibidas nas tabelas de cada tipo</p>
+        <h3 className="text-lg font-semibold text-foreground">Configuração de Colunas</h3>
+        <p className="text-sm text-muted-foreground">Configure quais colunas serão exibidas nas tabelas de cada tipo</p>
       </div>
       
       <Accordion type="multiple" defaultValue={["picking"]} className="w-full">
         <AccordionItem value="picking">
           <AccordionTrigger className="hover:no-underline">
             <div className="flex items-center gap-2">
-              <ClipboardList className="w-4 h-4 text-blue-600" />
+              <ClipboardList className="w-4 h-4 text-blue-600 dark:text-blue-400" />
               <span>Tabela Picking</span>
             </div>
           </AccordionTrigger>
           <AccordionContent>
             <ColumnConfigSection
               title="Picking"
-              icon={<ClipboardList className="w-4 h-4 text-blue-600" />}
+              icon={<ClipboardList className="w-4 h-4 text-blue-600 dark:text-blue-400" />}
               columns={filterColumns(pickingColumns, "picking")}
               onToggle={pickingActions.toggleColumn}
               onReset={pickingActions.resetColumns}
@@ -344,14 +340,14 @@ export const ColunasTab: React.FC<ColunasTabProps> = ({ config, setConfig }) => 
         <AccordionItem value="fifo">
           <AccordionTrigger className="hover:no-underline">
             <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4 text-orange-600" />
+              <Clock className="w-4 h-4 text-orange-600 dark:text-orange-400" />
               <span>Tabela FIFO</span>
             </div>
           </AccordionTrigger>
           <AccordionContent>
             <ColumnConfigSection
               title="FIFO"
-              icon={<Clock className="w-4 h-4 text-orange-600" />}
+              icon={<Clock className="w-4 h-4 text-orange-600 dark:text-orange-400" />}
               columns={filterColumns(fifoColumns, "fifo")}
               onToggle={fifoActions.toggleColumn}
               onReset={fifoActions.resetColumns}
@@ -365,14 +361,14 @@ export const ColunasTab: React.FC<ColunasTabProps> = ({ config, setConfig }) => 
         <AccordionItem value="pallet">
           <AccordionTrigger className="hover:no-underline">
             <div className="flex items-center gap-2">
-              <Layers className="w-4 h-4 text-green-600" />
+              <Layers className="w-4 h-4 text-green-600 dark:text-green-400" />
               <span>Tabela Pallet</span>
             </div>
           </AccordionTrigger>
           <AccordionContent>
             <ColumnConfigSection
               title="Pallet"
-              icon={<Layers className="w-4 h-4 text-green-600" />}
+              icon={<Layers className="w-4 h-4 text-green-600 dark:text-green-400" />}
               columns={filterColumns(palletColumns, "pallet")}
               onToggle={palletActions.toggleColumn}
               onReset={palletActions.resetColumns}
@@ -386,14 +382,14 @@ export const ColunasTab: React.FC<ColunasTabProps> = ({ config, setConfig }) => 
         <AccordionItem value="unidades">
           <AccordionTrigger className="hover:no-underline">
             <div className="flex items-center gap-2">
-              <Package2 className="w-4 h-4 text-purple-600" />
+              <Package2 className="w-4 h-4 text-purple-600 dark:text-purple-400" />
               <span>Tabela Unidades</span>
             </div>
           </AccordionTrigger>
           <AccordionContent>
             <ColumnConfigSection
               title="Unidades"
-              icon={<Package2 className="w-4 h-4 text-purple-600" />}
+              icon={<Package2 className="w-4 h-4 text-purple-600 dark:text-purple-400" />}
               columns={filterColumns(unidadesColumns, "unidades")}
               onToggle={unidadesActions.toggleColumn}
               onReset={unidadesActions.resetColumns}
@@ -405,12 +401,12 @@ export const ColunasTab: React.FC<ColunasTabProps> = ({ config, setConfig }) => 
         </AccordionItem>
       </Accordion>
 
-      <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+      <div className="p-4 bg-green-50 dark:bg-green-950/20 rounded-lg border border-green-200 dark:border-green-800">
         <div className="flex items-start gap-3">
           <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
           <div>
-            <p className="text-sm font-medium text-green-900">Funcionalidade Ativa</p>
-            <p className="text-xs text-green-700 mt-1">
+            <p className="text-sm font-medium text-green-900 dark:text-green-100">Funcionalidade Ativa</p>
+            <p className="text-xs text-green-700 dark:text-green-300 mt-1">
               Você pode arrastar e soltar as colunas para reordená-las, e usar os switches para mostrar/ocultar colunas específicas em cada tipo de tabela.
             </p>
           </div>

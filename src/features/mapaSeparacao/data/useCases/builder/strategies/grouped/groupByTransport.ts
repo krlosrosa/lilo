@@ -11,10 +11,11 @@ export class GroupByTransport implements GroupStrategy {
 
   group(data: any[]): GroupedResult {
     return groupBy(data, (item) => {
-      const grupoTransporte = this.transportes.find(grupo => grupo.items.includes(item.transport))
-      const segregado = this.segreged.includes(item.customerCode)
-      const grupoRemessa = this.remessas.find(grupo => grupo.items.includes(item.shipment))
-      console.log({item})
+      // Verificações de segurança para evitar erros com arrays undefined
+      const grupoTransporte = this.transportes?.find(grupo => grupo.items.includes(item.transport))
+      const segregado = this.segreged?.includes(item.customerCode) || false
+      const grupoRemessa = this.remessas?.find(grupo => grupo.items.includes(item.shipment))
+      
       if (grupoRemessa) {      
         console.log({grupoRemessa})
         return `transporte:${item.transport}[grupo-${grupoRemessa.name}]:remessa`
@@ -23,9 +24,11 @@ export class GroupByTransport implements GroupStrategy {
       if (grupoTransporte) {
         return `transporte:${item.transport}[grupo-${grupoTransporte.name}]`
       }
+      
       if (segregado) {
         return `transporte:${item.transport}[segregado-${item.customerCode}]`
       }
+      
       return `transporte:${item.transport}`
     });
   }
