@@ -11,16 +11,16 @@ const initialConfig: PropsConfig = {
   clientes: [],
   isRange: false,
   minRange: 0,
-  maxRange: 100,
+  maxRange: 0,
   isPallet: false,
   maxPallet: 0,
-  palletsFull: false,
+  palletsFull: true,
   unidadesSeparadas: false,
   isSegregedFifo: false,
   rangeFifo: [],
   convertToPallet: false,
   isLine: false,
-  maxLine: 10,
+  maxLine: 50,
 };
 
 interface ConfigPrintStore {
