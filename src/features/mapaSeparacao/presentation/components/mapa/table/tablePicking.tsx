@@ -57,8 +57,9 @@ export const TablePicking: React.FC<TablePickingProps> = ({ data, ariaLabel = "T
               <tr
                 key={idx}
                 className={cn(
-                  "even:bg-blue-25 hover:bg-blue-50 focus-within:bg-blue-100 text-[11px] font-semibold",
-                  !isGreenBelt && "font-semibold bg-slate-300"
+                  "even:bg-blue-25 hover:bg-blue-50 focus-within:bg-blue-100 text-[11px]",
+                  !isGreenBelt && "font-bold ",
+                  idx % 2 === 0 && "bg-slate-200"
                 )}
                 tabIndex={0}
                 aria-label={`Linha ${idx + 1}`}
