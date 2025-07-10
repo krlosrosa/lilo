@@ -77,13 +77,13 @@ export const useMapaPrint = (
   const componentRef = useRef<HTMLDivElement | null>(null);
 
   const {
-    documentTitle = 'Mapa Organizado - Resumo de Dados',
+    documentTitle = '',
     pageStyle,
     onBeforePrint,
     onAfterPrint,
   } = options;
 
-  const finalPageStyle = pageStyle || createMapaPageStyle();
+  const finalPageStyle = createMapaPageStyle();
 
   const handlePrint = useReactToPrint({
     contentRef: componentRef,
