@@ -25,10 +25,9 @@ export const TablePicking: React.FC<TablePickingProps> = ({ data, ariaLabel = "T
   return (
     <div className="w-full">
       {/* Cabeçalho específico Picking */}
-      <div className="bg-blue-50 border border-blue-200 rounded-t p-2 flex items-center gap-2">
+      <div className="bg-blue-50 border justify-center border-blue-200 rounded-t p-2 flex items-center gap-2">
         <ClipboardList className="w-4 h-4 text-blue-600" />
         <span className="font-bold text-blue-700">SEPARAÇÃO POR PICKING</span>
-        <Package2 className="w-4 h-4 text-blue-600" />
       </div>
       
       <table
