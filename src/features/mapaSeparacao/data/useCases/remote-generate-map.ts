@@ -51,13 +51,13 @@ export class RemoteGenerateMap implements GenerateMap {
     builder.split(new SplitPalletAndUnits())
     builder.addStrategy(new GroupByFifoPalletUnitPicking(config))
     builder.sortGroup('asc')
+    builder.summarize(new SumByItemAndLoteStrategy())
     if (config.isLine) {
       builder.addStrategy(new GroupByLineCount(config, config.maxLine))
     }
     if (config.isPallet) {
       builder.addStrategy(new GroupByPalletPercentage(config, config.maxPallet))
     }
-    builder.summarize(new SumByItemAndLoteStrategy())
     builder.addHeader(new SimpleHeaderStrategy(config.tipo, router))
     const result = builder.build(shipment)
 
