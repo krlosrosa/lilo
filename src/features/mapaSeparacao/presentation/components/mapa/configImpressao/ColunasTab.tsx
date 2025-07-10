@@ -13,7 +13,7 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Eye, EyeOff, RotateCcw, GripVertical, ClipboardList, Clock, Layers, Package2 } from "lucide-react";
+import { Eye, EyeOff, RotateCcw, GripVertical, ClipboardList, Clock, Layers, Package2, Lock } from "lucide-react";
 import {
   DndContext,
   closestCenter,
@@ -42,6 +42,7 @@ type ColunasTabProps = {
 type SortableColumnItemProps = {
   column: ColumnConfig;
   onToggle: (key: string) => void;
+  tableType: string;
 };
 
 type ColumnConfigSectionProps = {
@@ -53,9 +54,11 @@ type ColumnConfigSectionProps = {
   onDragEnd: (event: DragEndEvent) => void;
   isDragging: boolean;
   setIsDragging: (dragging: boolean) => void;
+  tableType: string;
 };
 
-const SortableColumnItem: React.FC<SortableColumnItemProps> = ({ column, onToggle }) => {
+const SortableColumnItem: React.FC<SortableColumnItemProps> = ({ column, onToggle, tableType }) => {
+  const { config: configPrint } = useConfigPrintStore();
   const {
     attributes,
     listeners,
@@ -69,6 +72,21 @@ const SortableColumnItem: React.FC<SortableColumnItemProps> = ({ column, onToggl
     transform: CSS.Transform.toString(transform),
     transition,
   };
+
+  const isLocked = () => {
+    if (configPrint.palletsFull && column.key === "Pallets" && tableType !== "pallet") {
+      return true;
+    }
+    if (configPrint.unidadesSeparadas && column.key === "units" && tableType === "picking") {
+      return true;
+    }
+    if (!configPrint.isRange && (column.key === "dataMinima" || column.key === "dataMaxima")) {
+      return true;
+    }
+    return false;
+  };
+
+  const locked = isLocked();
 
   return (
     <div
@@ -88,12 +106,14 @@ const SortableColumnItem: React.FC<SortableColumnItemProps> = ({ column, onToggl
           <GripVertical className="w-4 h-4 text-muted-foreground hover:text-foreground" />
         </div>
         <div className="flex items-center gap-2">
-          {column.visible ? (
+          {locked ? (
+            <Lock className="w-4 h-4 text-muted-foreground" />
+          ) : column.visible ? (
             <Eye className="w-4 h-4 text-green-600" />
           ) : (
             <EyeOff className="w-4 h-4 text-muted-foreground" />
           )}
-          <span className={`font-medium ${column.visible ? 'text-foreground' : 'text-muted-foreground'}`}>
+          <span className={`font-medium ${column.visible && !locked ? 'text-foreground' : 'text-muted-foreground'}`}>
             {column.label}
           </span>
         </div>
@@ -104,7 +124,8 @@ const SortableColumnItem: React.FC<SortableColumnItemProps> = ({ column, onToggl
           Ordem: {column.order + 1}
         </span>
         <Switch
-          checked={column.visible}
+          checked={locked ? false : column.visible}
+          disabled={locked}
           onCheckedChange={() => onToggle(column.key)}
           aria-label={`Mostrar/ocultar coluna ${column.label}`}
         />
@@ -121,7 +142,8 @@ const ColumnConfigSection: React.FC<ColumnConfigSectionProps> = ({
   onReset, 
   onDragEnd, 
   isDragging, 
-  setIsDragging 
+  setIsDragging,
+  tableType,
 }) => {
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -180,6 +202,7 @@ const ColumnConfigSection: React.FC<ColumnConfigSectionProps> = ({
                 key={column.key}
                 column={column}
                 onToggle={onToggle}
+                tableType={tableType}
               />
             ))}
           </SortableContext>
@@ -191,120 +214,41 @@ const ColumnConfigSection: React.FC<ColumnConfigSectionProps> = ({
 
 export const ColunasTab: React.FC<ColunasTabProps> = ({ config, setConfig }) => {
   const { pickingColumns, fifoColumns, palletColumns, unidadesColumns } = useColumnsControlStore();
-  const { config: configPrint } = useConfigPrintStore();
   const pickingActions = usePickingColumnActions();
   const fifoActions = useFifoColumnActions();
   const palletActions = usePalletColumnActions();
   const unidadesActions = useUnidadesColumnActions();
   const [isDragging, setIsDragging] = useState(false);
 
-  // Função helper para filtrar colunas baseado na configuração
-  const filterColumns = (columns: ColumnConfig[], tableType?: string): ColumnConfig[] => {
-    return columns.filter(col => {
-      // Filtrar coluna "Pallets" quando palletsFull for true e NÃO for separação por pallet
-      if (configPrint.palletsFull && col.key === "Pallets" && tableType !== "pallet") {
-        return false;
-      }
-      
-      // Filtrar coluna "units" quando unidadesSeparadas for true e for tabela picking
-      if (configPrint.unidadesSeparadas && col.key === "units" && tableType === "picking") {
-        return false;
-      }
-      
-      // Filtrar colunas "dataMinima" e "dataMaxima" quando isRange for false
-      if (!configPrint.isRange && (col.key === "dataMinima" || col.key === "dataMaxima")) {
-        return false;
-      }
-      
-      return true;
-    });
-  };
-
   // Handlers para Picking
   const handlePickingDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    if (active.id !== over?.id) {
-      const filteredColumns = filterColumns(pickingColumns, "picking");
-      const oldIndex = filteredColumns.findIndex(col => col.key === active.id);
-      const newIndex = filteredColumns.findIndex(col => col.key === over?.id);
-      
-      if (oldIndex !== -1 && newIndex !== -1) {
-        const newFilteredColumns = arrayMove(filteredColumns, oldIndex, newIndex);
-        
-        // Mapear de volta para o array completo, preservando a ordem das colunas filtradas
-        const newColumns = pickingColumns.map(col => {
-          const foundCol = newFilteredColumns.find(newCol => newCol.key === col.key);
-          return foundCol || col;
-        });
-        
-        pickingActions.updateColumnOrder(newColumns);
-      }
+    if (over && active.id !== over.id) {
+      pickingActions.reorderColumns(active.id as string, over.id as string);
     }
   };
 
   // Handlers para FIFO
   const handleFifoDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    if (active.id !== over?.id) {
-      const filteredColumns = filterColumns(fifoColumns, "fifo");
-      const oldIndex = filteredColumns.findIndex(col => col.key === active.id);
-      const newIndex = filteredColumns.findIndex(col => col.key === over?.id);
-      
-      if (oldIndex !== -1 && newIndex !== -1) {
-        const newFilteredColumns = arrayMove(filteredColumns, oldIndex, newIndex);
-        
-        // Mapear de volta para o array completo, preservando a ordem das colunas filtradas
-        const newColumns = fifoColumns.map(col => {
-          const foundCol = newFilteredColumns.find(newCol => newCol.key === col.key);
-          return foundCol || col;
-        });
-        
-        fifoActions.updateColumnOrder(newColumns);
-      }
+    if (over && active.id !== over.id) {
+      fifoActions.reorderColumns(active.id as string, over.id as string);
     }
   };
 
   // Handlers para Pallet
   const handlePalletDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    if (active.id !== over?.id) {
-      const filteredColumns = filterColumns(palletColumns, "pallet");
-      const oldIndex = filteredColumns.findIndex(col => col.key === active.id);
-      const newIndex = filteredColumns.findIndex(col => col.key === over?.id);
-      
-      if (oldIndex !== -1 && newIndex !== -1) {
-        const newFilteredColumns = arrayMove(filteredColumns, oldIndex, newIndex);
-        
-        // Mapear de volta para o array completo, preservando a ordem das colunas filtradas
-        const newColumns = palletColumns.map(col => {
-          const foundCol = newFilteredColumns.find(newCol => newCol.key === col.key);
-          return foundCol || col;
-        });
-        
-        palletActions.updateColumnOrder(newColumns);
-      }
+    if (over && active.id !== over.id) {
+      palletActions.reorderColumns(active.id as string, over.id as string);
     }
   };
 
   // Handlers para Unidades
   const handleUnidadesDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    if (active.id !== over?.id) {
-      const filteredColumns = filterColumns(unidadesColumns, "unidades");
-      const oldIndex = filteredColumns.findIndex(col => col.key === active.id);
-      const newIndex = filteredColumns.findIndex(col => col.key === over?.id);
-      
-      if (oldIndex !== -1 && newIndex !== -1) {
-        const newFilteredColumns = arrayMove(filteredColumns, oldIndex, newIndex);
-        
-        // Mapear de volta para o array completo, preservando a ordem das colunas filtradas
-        const newColumns = unidadesColumns.map(col => {
-          const foundCol = newFilteredColumns.find(newCol => newCol.key === col.key);
-          return foundCol || col;
-        });
-        
-        unidadesActions.updateColumnOrder(newColumns);
-      }
+    if (over && active.id !== over.id) {
+      unidadesActions.reorderColumns(active.id as string, over.id as string);
     }
   };
 
@@ -327,12 +271,13 @@ export const ColunasTab: React.FC<ColunasTabProps> = ({ config, setConfig }) => 
             <ColumnConfigSection
               title="Picking"
               icon={<ClipboardList className="w-4 h-4 text-blue-600 dark:text-blue-400" />}
-              columns={filterColumns(pickingColumns, "picking")}
+              columns={pickingColumns.sort((a,b) => a.order - b.order)}
               onToggle={pickingActions.toggleColumn}
               onReset={pickingActions.resetColumns}
               onDragEnd={handlePickingDragEnd}
               isDragging={isDragging}
               setIsDragging={setIsDragging}
+              tableType="picking"
             />
           </AccordionContent>
         </AccordionItem>
@@ -348,12 +293,13 @@ export const ColunasTab: React.FC<ColunasTabProps> = ({ config, setConfig }) => 
             <ColumnConfigSection
               title="FIFO"
               icon={<Clock className="w-4 h-4 text-orange-600 dark:text-orange-400" />}
-              columns={filterColumns(fifoColumns, "fifo")}
+              columns={fifoColumns.sort((a,b) => a.order - b.order)}
               onToggle={fifoActions.toggleColumn}
               onReset={fifoActions.resetColumns}
               onDragEnd={handleFifoDragEnd}
               isDragging={isDragging}
               setIsDragging={setIsDragging}
+              tableType="fifo"
             />
           </AccordionContent>
         </AccordionItem>
@@ -369,12 +315,13 @@ export const ColunasTab: React.FC<ColunasTabProps> = ({ config, setConfig }) => 
             <ColumnConfigSection
               title="Pallet"
               icon={<Layers className="w-4 h-4 text-green-600 dark:text-green-400" />}
-              columns={filterColumns(palletColumns, "pallet")}
+              columns={palletColumns.sort((a,b) => a.order - b.order)}
               onToggle={palletActions.toggleColumn}
               onReset={palletActions.resetColumns}
               onDragEnd={handlePalletDragEnd}
               isDragging={isDragging}
               setIsDragging={setIsDragging}
+              tableType="pallet"
             />
           </AccordionContent>
         </AccordionItem>
@@ -390,12 +337,13 @@ export const ColunasTab: React.FC<ColunasTabProps> = ({ config, setConfig }) => 
             <ColumnConfigSection
               title="Unidades"
               icon={<Package2 className="w-4 h-4 text-purple-600 dark:text-purple-400" />}
-              columns={filterColumns(unidadesColumns, "unidades")}
+              columns={unidadesColumns.sort((a,b) => a.order - b.order)}
               onToggle={unidadesActions.toggleColumn}
               onReset={unidadesActions.resetColumns}
               onDragEnd={handleUnidadesDragEnd}
               isDragging={isDragging}
               setIsDragging={setIsDragging}
+              tableType="unidades"
             />
           </AccordionContent>
         </AccordionItem>

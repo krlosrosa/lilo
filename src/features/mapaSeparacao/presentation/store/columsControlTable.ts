@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { useConfigPrintStore } from './configPrint';
+import { arrayMove } from '@dnd-kit/sortable';
 
 export interface ColumnConfig {
   key: string;
@@ -18,25 +19,25 @@ interface ColumnsControlState {
   
   // Actions para picking
   togglePickingColumn: (key: string) => void;
-  reorderPickingColumns: (dragIndex: number, hoverIndex: number) => void;
+  reorderPickingColumns: (activeId: string, overId: string) => void;
   resetPickingColumns: () => void;
   updatePickingColumnOrder: (columns: ColumnConfig[]) => void;
   
   // Actions para FIFO
   toggleFifoColumn: (key: string) => void;
-  reorderFifoColumns: (dragIndex: number, hoverIndex: number) => void;
+  reorderFifoColumns: (activeId: string, overId: string) => void;
   resetFifoColumns: () => void;
   updateFifoColumnOrder: (columns: ColumnConfig[]) => void;
   
   // Actions para Pallet
   togglePalletColumn: (key: string) => void;
-  reorderPalletColumns: (dragIndex: number, hoverIndex: number) => void;
+  reorderPalletColumns: (activeId: string, overId: string) => void;
   resetPalletColumns: () => void;
   updatePalletColumnOrder: (columns: ColumnConfig[]) => void;
   
   // Actions para Unidades
   toggleUnidadesColumn: (key: string) => void;
-  reorderUnidadesColumns: (dragIndex: number, hoverIndex: number) => void;
+  reorderUnidadesColumns: (activeId: string, overId: string) => void;
   resetUnidadesColumns: () => void;
   updateUnidadesColumnOrder: (columns: ColumnConfig[]) => void;
 }
@@ -111,20 +112,18 @@ export const useColumnsControlStore = create<ColumnsControlState>()(
         }));
       },
 
-      reorderPickingColumns: (dragIndex: number, hoverIndex: number) => {
+      reorderPickingColumns: (activeId: string, overId: string) => {
         set((state) => {
-          const columns = [...state.pickingColumns];
-          const draggedColumn = columns[dragIndex];
+          const oldIndex = state.pickingColumns.findIndex((col) => col.key === activeId);
+          const newIndex = state.pickingColumns.findIndex((col) => col.key === overId);
           
-          columns.splice(dragIndex, 1);
-          columns.splice(hoverIndex, 0, draggedColumn);
-          
-          const reorderedColumns = columns.map((col, index) => ({
-            ...col,
-            order: index
-          }));
-          
-          return { pickingColumns: reorderedColumns };
+          if (oldIndex !== -1 && newIndex !== -1) {
+            const reordered = arrayMove(state.pickingColumns, oldIndex, newIndex);
+            return { 
+              pickingColumns: reordered.map((col, index) => ({ ...col, order: index })) 
+            };
+          }
+          return {};
         });
       },
 
@@ -145,20 +144,18 @@ export const useColumnsControlStore = create<ColumnsControlState>()(
         }));
       },
 
-      reorderFifoColumns: (dragIndex: number, hoverIndex: number) => {
+      reorderFifoColumns: (activeId: string, overId: string) => {
         set((state) => {
-          const columns = [...state.fifoColumns];
-          const draggedColumn = columns[dragIndex];
+          const oldIndex = state.fifoColumns.findIndex((col) => col.key === activeId);
+          const newIndex = state.fifoColumns.findIndex((col) => col.key === overId);
           
-          columns.splice(dragIndex, 1);
-          columns.splice(hoverIndex, 0, draggedColumn);
-          
-          const reorderedColumns = columns.map((col, index) => ({
-            ...col,
-            order: index
-          }));
-          
-          return { fifoColumns: reorderedColumns };
+          if (oldIndex !== -1 && newIndex !== -1) {
+            const reordered = arrayMove(state.fifoColumns, oldIndex, newIndex);
+            return { 
+              fifoColumns: reordered.map((col, index) => ({ ...col, order: index })) 
+            };
+          }
+          return {};
         });
       },
 
@@ -179,20 +176,18 @@ export const useColumnsControlStore = create<ColumnsControlState>()(
         }));
       },
 
-      reorderPalletColumns: (dragIndex: number, hoverIndex: number) => {
+      reorderPalletColumns: (activeId: string, overId: string) => {
         set((state) => {
-          const columns = [...state.palletColumns];
-          const draggedColumn = columns[dragIndex];
-          
-          columns.splice(dragIndex, 1);
-          columns.splice(hoverIndex, 0, draggedColumn);
-          
-          const reorderedColumns = columns.map((col, index) => ({
-            ...col,
-            order: index
-          }));
-          
-          return { palletColumns: reorderedColumns };
+          const oldIndex = state.palletColumns.findIndex((col) => col.key === activeId);
+          const newIndex = state.palletColumns.findIndex((col) => col.key === overId);
+
+          if (oldIndex !== -1 && newIndex !== -1) {
+            const reordered = arrayMove(state.palletColumns, oldIndex, newIndex);
+            return { 
+              palletColumns: reordered.map((col, index) => ({ ...col, order: index })) 
+            };
+          }
+          return {};
         });
       },
 
@@ -213,20 +208,18 @@ export const useColumnsControlStore = create<ColumnsControlState>()(
         }));
       },
 
-      reorderUnidadesColumns: (dragIndex: number, hoverIndex: number) => {
+      reorderUnidadesColumns: (activeId: string, overId: string) => {
         set((state) => {
-          const columns = [...state.unidadesColumns];
-          const draggedColumn = columns[dragIndex];
-          
-          columns.splice(dragIndex, 1);
-          columns.splice(hoverIndex, 0, draggedColumn);
-          
-          const reorderedColumns = columns.map((col, index) => ({
-            ...col,
-            order: index
-          }));
-          
-          return { unidadesColumns: reorderedColumns };
+          const oldIndex = state.unidadesColumns.findIndex((col) => col.key === activeId);
+          const newIndex = state.unidadesColumns.findIndex((col) => col.key === overId);
+
+          if (oldIndex !== -1 && newIndex !== -1) {
+            const reordered = arrayMove(state.unidadesColumns, oldIndex, newIndex);
+            return { 
+              unidadesColumns: reordered.map((col, index) => ({ ...col, order: index })) 
+            };
+          }
+          return {};
         });
       },
 
@@ -357,23 +350,3 @@ export const useUnidadesColumnActions = () => {
     updateColumnOrder: updateUnidadesColumnOrder,
   };
 };
-
-/**
- * EXEMPLO DE USO:
- * 
- * // Para usar nas tabelas (já implementado em tablePicking.tsx):
- * const visibleColumns = usePickingColumns();
- * 
- * // Para criar interface de configuração (futuro):
- * const { toggleColumn, reorderColumns, resetColumns } = usePickingColumnActions();
- * const { pickingColumns } = useColumnsControlStore();
- * 
- * // Exemplo de como ocultar uma coluna:
- * toggleColumn('belt'); // Oculta/mostra a coluna "Faixa"
- * 
- * // Exemplo de como reordenar colunas (drag and drop):
- * reorderColumns(0, 2); // Move a primeira coluna para a terceira posição
- * 
- * // Exemplo de como resetar para configuração padrão:
- * resetColumns();
- */
