@@ -33,7 +33,7 @@ export const Header: React.FC<HeaderProps> = ({ header, caminho, type, index }) 
   const tipo = caminho?.split(' > ').find(item => item.includes('tipo:'))?.replace('tipo:', '')
   const segmento = caminho?.split(' > ').find(item => item.includes('segmento:'))?.replace('segmento:', '')
   const empresa = caminho?.split(' > ').find(item => item.includes('empresa:'))?.replace('empresa:', '')
-  const infoQrCode = `${header.transporte};${header.id};${header.Caixas};${header.Unidades};${header.linhasPicking};${tipo};${empresa};SEPARACAO`
+  const infoQrCode = `${header.transporte};${header.id};${header.Caixas};${header.Unidades};${header.linhasPicking};${segmento};${empresa};SEPARACAO`
 
   // Renderizar o header específico baseado no tipo
   if (tipo?.toUpperCase().includes('2-FIFO')) {
