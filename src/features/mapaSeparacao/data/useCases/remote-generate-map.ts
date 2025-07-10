@@ -57,7 +57,7 @@ export class RemoteGenerateMap implements GenerateMap {
     if (config.isPallet) {
       builder.addStrategy(new GroupByPalletPercentage(config, config.maxPallet))
     }
-
+    builder.summarize(new SumByItemAndLoteStrategy())
     builder.addHeader(new SimpleHeaderStrategy(config.tipo, router))
     const result = builder.build(shipment)
 
