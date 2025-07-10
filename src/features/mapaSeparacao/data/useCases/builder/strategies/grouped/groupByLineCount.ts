@@ -2,7 +2,7 @@ import { PropsConfig } from "@/features/mapaSeparacao/domain/generate-map";
 import { GroupedResult, GroupStrategy } from "../../component-interface";
 
 export class GroupByLineCount implements GroupStrategy {
-  constructor(private readonly config: PropsConfig, private readonly limit: number = 10) {}
+  constructor(private readonly config: PropsConfig, private readonly limit: number = 10) { }
 
   group(data: any[]): GroupedResult {
     let lineCount = 0;
@@ -12,19 +12,25 @@ export class GroupByLineCount implements GroupStrategy {
     const noBoxes: any[] = [];
 
     for (const item of data) {
+      if (item.boxes === 0 && item.units === 0 && this.config.palletsFull) {
+        noBoxes.push(item);
+        continue;
+      }
+
+      if (item.boxes === 0 && this.config.unidadesSeparadas) {
+        noBoxes.push(item);
+        continue;
+      }
+
       if (this.config.isSegregedFifo && this.config.rangeFifo.includes(item.belt)) {
         noBoxes.push(item);
         continue;
       }
-      if(this.config.palletsFull){
-        if(item.Pallets > 0){
+      if (this.config.palletsFull) {
+        if (item.Pallets > 0) {
           noBoxes.push(item);
           continue;
         }
-      }
-      if (!(item.boxes > 0)) {
-        noBoxes.push(item);
-        continue;
       }
       if (lineCount >= this.limit && currentGroup.length > 0) {
         result[`Group:${groupIndex}`] = currentGroup;

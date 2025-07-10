@@ -52,6 +52,7 @@ export class RemoteGenerateMap implements GenerateMap {
     builder.addStrategy(new GroupByFifoPalletUnitPicking(config))
     builder.sortGroup('asc')
     builder.summarize(new SumByItemAndLoteStrategy())
+    //builder.sort('pickWay', 'asc')
     if (config.isLine) {
       builder.addStrategy(new GroupByLineCount(config, config.maxLine))
     }

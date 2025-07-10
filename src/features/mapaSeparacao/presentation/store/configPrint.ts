@@ -21,6 +21,7 @@ const initialConfig: PropsConfig = {
   convertToPallet: false,
   isLine: false,
   maxLine: 50,
+  infoClientHeader: false,
 };
 
 interface ConfigPrintStore {

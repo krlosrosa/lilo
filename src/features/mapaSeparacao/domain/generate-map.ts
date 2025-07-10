@@ -32,4 +32,5 @@ export type PropsConfig = {
   isSegregedFifo: boolean
   rangeFifo: string[]
   convertToPallet: boolean
+  infoClientHeader: boolean
 }

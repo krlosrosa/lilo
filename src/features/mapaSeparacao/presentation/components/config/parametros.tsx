@@ -7,7 +7,7 @@ import { Switch } from "@/components/ui/switch";
 import { PropsConfig } from "../../../domain/generate-map";
 import { Dispatch, SetStateAction } from "react";
 import { produce } from "immer";
-import { FileText, Layers, Package, Palette, RefreshCw, Clock } from "lucide-react";
+import { FileText, Layers, Package, Palette, RefreshCw, Clock, User } from "lucide-react";
 
 type Props = {
   config: PropsConfig
@@ -16,7 +16,7 @@ type Props = {
 
 export function ParametrosConfig({ config, setConfig }: Props) {
 
-  const handleUpdateBooleanProperty = (property: keyof Pick<PropsConfig, 'isRange' | 'isPallet' | 'palletsFull' | 'unidadesSeparadas' | 'isSegregedFifo' | 'convertToPallet'>, value: boolean) => {
+  const handleUpdateBooleanProperty = (property: keyof Pick<PropsConfig, 'isRange' | 'isPallet' | 'palletsFull' | 'unidadesSeparadas' | 'isSegregedFifo' | 'convertToPallet' | 'infoClientHeader'>, value: boolean) => {
     setConfig(produce(config, (draft) => {
       draft[property] = value;
     }));
@@ -143,6 +143,30 @@ export function ParametrosConfig({ config, setConfig }: Props) {
               </div>
             </div>
           )}
+        </div>
+        
+        <Separator />
+
+        {/* Informações do Cliente no Cabeçalho */}
+        <div className="space-y-3">
+          <Label className="text-base font-medium flex items-center gap-2">
+            <User className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+            Exibir info do cliente no cabeçalho
+          </Label>
+          <RadioGroup
+            className="grid grid-cols-2 gap-2"
+            value={config.infoClientHeader ? 'Sim' : 'Não'}
+            onValueChange={(value) => handleUpdateBooleanProperty('infoClientHeader', value === 'Sim')}
+          >
+            <div className="flex items-center space-x-2 p-2 rounded hover:bg-muted/50 transition-colors">
+              <RadioGroupItem value="Sim" id="sim-info-cliente" />
+              <Label htmlFor="sim-info-cliente" className="cursor-pointer text-sm">Sim</Label>
+            </div>
+            <div className="flex items-center space-x-2 p-2 rounded hover:bg-muted/50 transition-colors">
+              <RadioGroupItem value="Não" id="nao-info-cliente" />
+              <Label htmlFor="nao-info-cliente" className="cursor-pointer text-sm">Não</Label>
+            </div>
+          </RadioGroup>
         </div>
 
         <Separator />

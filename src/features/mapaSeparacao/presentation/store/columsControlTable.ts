@@ -55,6 +55,7 @@ const defaultPickingColumns: ColumnConfig[] = [
   { key: "dataMaxima", label: "Data máxima", visible: true, order: 8 },
   { key: "belt", label: "Faixa", visible: true, order: 9 },
   { key: "manufacturingDate", label: "Data de fabricação", visible: true, order: 10 },
+
 ];
 
 // Configuração padrão das colunas para FIFO

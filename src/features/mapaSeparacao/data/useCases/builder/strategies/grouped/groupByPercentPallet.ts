@@ -12,10 +12,16 @@ export class GroupByPalletPercentage implements GroupStrategy {
     const noBoxes: any[] = [];
 
     for (const item of data) {
-      if (!(item.boxes > 0)) {
+      if (item.boxes === 0 && item.units === 0 && this.config.palletsFull) {
         noBoxes.push(item);
         continue;
       }
+
+      if (item.boxes === 0 && this.config.unidadesSeparadas) {
+        noBoxes.push(item);
+        continue;
+      }
+      
       if (this.config.isSegregedFifo && this.config.rangeFifo.includes(item.belt)) {
         noBoxes.push(item);
         continue;
