@@ -10,7 +10,7 @@ import Validacao from "../components/validação";
 import Configuracao from "../components/configuracao";
 import { GenerateMap, GenerateMapResult } from "../../domain/generate-map";
 import { PrintPage } from "../components/mapa/mapa";
-import useMapaPrint, { createTransportPageStyle, headerConfig } from "../hooks/use-mapa-print";
+import useMapaPrint from "../hooks/use-mapa-print";
 import { ConvertXlsx } from "../../infra/convertXlsx";
 import { ShipmentItem } from "../../types/shipment-type";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -43,8 +43,6 @@ export default function MapaSeparacao({ validateProducts, validateRoutes, genera
   const [tipoMapa, setTipoMapa] = useState<'separacao' | 'carregamento'>('separacao');
 
   const { componentRef, handlePrint } = useMapaPrint({
-    headerConfig,
-    pageStyle: createTransportPageStyle([]),
     onBeforePrint: async () => {
       console.log('Preparando impressão...');
     },
