@@ -60,7 +60,7 @@ export class RemoteGenerateMap implements GenerateMap {
     builder.summarize(new SumByItemAndLoteStrategy())
     builder.addHeader(new SimpleHeaderStrategy(config.tipo, router))
     const result = builder.build(shipment)
-    
+
     return result
   }
 }
