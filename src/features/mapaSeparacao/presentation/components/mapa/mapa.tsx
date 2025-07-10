@@ -30,8 +30,10 @@ export const PrintPage = ({ group, path = [], type }: Props) => {
         const newPath = [...path, key];
         // Caso value seja um objeto com items (array) e header
         if (isGroupWithItemsAndHeader(value)) {
+          const transporte = value.header?.transporte;
+          const transporteClass = transporte ? `page-transporte-${transporte}` : '';
           return (
-            <div key={newPath.join('|')} className="mb-4 page-break">
+            <div key={newPath.join('|')} className={`mb-4 page-break ${transporteClass}`}>
               {value.header && <Header index={index} key={index} header={value.header} caminho={newPath.join(' > ')} type={type} />}
               <Table data={value.items} ariaLabel={`Tabela do caminho ${newPath.join(' > ')}`} caminho={newPath.join(' > ')} />
             </div>

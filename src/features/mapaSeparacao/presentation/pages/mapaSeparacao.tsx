@@ -42,7 +42,11 @@ export default function MapaSeparacao({ validateProducts, validateRoutes, genera
   const [shipment, setShipment] = useState<ShipmentItem[]>([]);
   const [tipoMapa, setTipoMapa] = useState<'separacao' | 'carregamento'>('separacao');
 
+  const info = shipment.map(s => s.transport)
+
   const { componentRef, handlePrint } = useMapaPrint({
+    transportes: info,
+    
     onBeforePrint: async () => {
       console.log('Preparando impressão...');
     },
