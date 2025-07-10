@@ -26,8 +26,10 @@ type UnidadeHeaderProps = {
     nomeCliente?: string;
     sequencia?: string | number;
     rota?: string;
+    id?: string;
     [key: string]: any;
   };
+  infoQrCode: string;
   type: 'transport' | 'customerCode';
   caminho?: string;
   index?: number;
@@ -38,9 +40,10 @@ const summaryFields = [
   { key: "Caixas", label: "Caixas", icon: Package },
   { key: "Unidades", label: "Unidades", icon: Package2 },
   { key: "Pallets", label: "Pallets", icon: Package },
+  { key: "id", label: "ID", icon: Hash },
 ];
 
-export const UnidadeHeader: React.FC<UnidadeHeaderProps> = ({ header, caminho, type, index }) => {
+export const UnidadeHeader: React.FC<UnidadeHeaderProps> = ({ header, infoQrCode, caminho, type, index }) => {
   const empresa = caminho?.split(' > ').find(item => item.includes('empresa:'))?.replace('empresa:', '')
   const segmento = caminho?.split(' > ').find(item => item.includes('segmento:'))?.replace('segmento:', '')
   const tipo = caminho?.split(' > ').find(item => item.includes('tipo:'))?.replace('tipo:', '')
@@ -170,7 +173,7 @@ export const UnidadeHeader: React.FC<UnidadeHeaderProps> = ({ header, caminho, t
           <div className="border-t border-gray-200 w-full mb-2"></div>
           
           {/* QR Code */}
-          <QRCodeSVG size={90} value="https://reactjs.org/" />
+          <QRCodeSVG size={90} value={infoQrCode} />
         </div>
       </div>
     </div>

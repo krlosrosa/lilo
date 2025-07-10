@@ -28,6 +28,7 @@ type FifoHeaderProps = {
     rota?: string;
     [key: string]: any;
   };
+  infoQrCode: string;
   type: 'transport' | 'customerCode';
   caminho?: string;
   index?: number;
@@ -38,6 +39,7 @@ const summaryFields = [
   { key: "Caixas", label: "Caixas", icon: Package },
   { key: "Unidades", label: "Unidades", icon: Package },
   { key: "Pallets", label: "Pallets", icon: Package },
+  { key: "id", label: "ID", icon: Hash },
 ];
 
 export const FifoHeader: React.FC<FifoHeaderProps> = ({ header, caminho, type, index }) => {

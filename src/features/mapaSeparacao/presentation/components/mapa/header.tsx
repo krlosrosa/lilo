@@ -15,6 +15,7 @@ type HeaderProps = {
     perfilVeiculo?: string;
     transportadora?: string;
     codCliente?: string;
+    linhasPicking?: number;
     nomeCliente?: string;
     sequencia?: string | number;
     rota?: string;
@@ -28,11 +29,15 @@ type HeaderProps = {
 
 
 export const Header: React.FC<HeaderProps> = ({ header, caminho, type, index }) => {
+
   const tipo = caminho?.split(' > ').find(item => item.includes('tipo:'))?.replace('tipo:', '')
+  const segmento = caminho?.split(' > ').find(item => item.includes('segmento:'))?.replace('segmento:', '')
+  const empresa = caminho?.split(' > ').find(item => item.includes('empresa:'))?.replace('empresa:', '')
+  const infoQrCode = `${header.transporte};${header.id};${header.Caixas};${header.Unidades};${header.linhasPicking};${tipo};${empresa};SEPARACAO`
 
   // Renderizar o header específico baseado no tipo
   if (tipo?.toUpperCase().includes('2-FIFO')) {
-    return <FifoHeader header={header} caminho={caminho} type={type} index={index} />;
+    return <FifoHeader infoQrCode={infoQrCode}  header={header} caminho={caminho} type={type} index={index} />;
   }
   
   if (tipo?.toUpperCase().includes('0-PALLET')) {
@@ -40,14 +45,14 @@ export const Header: React.FC<HeaderProps> = ({ header, caminho, type, index }) 
   }
   
   if (tipo?.toUpperCase().includes('PICKING')) {
-    return <PickingHeader header={header} caminho={caminho} type={type} index={index} />;
+    return <PickingHeader infoQrCode={infoQrCode} header={header} caminho={caminho} type={type} index={index} />;
   }
   
   if (tipo?.toUpperCase().includes('3-UNIDADES')) {
-    return <UnidadeHeader header={header} caminho={caminho} type={type} index={index} />;
+    return <UnidadeHeader infoQrCode={infoQrCode} header={header} caminho={caminho} type={type} index={index} />;
   }
 
   // Se não corresponder a nenhum tipo específico, usar o header padrão (picking)
-  return <PickingHeader header={header} caminho={caminho} type={type} index={index} />;
+  return <PickingHeader infoQrCode={infoQrCode} header={header} caminho={caminho} type={type} index={index} />;
 };
 

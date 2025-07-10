@@ -1,13 +1,17 @@
 import { RoutingItem } from "@/features/mapaSeparacao/types/routing-type";
 import { HeaderStrategy } from "./type-headers";
+import { customAlphabet } from "nanoid";
 
 export class SimpleHeaderStrategy implements HeaderStrategy {
   constructor(private readonly type: string, private readonly router: RoutingItem[] | null) { }
   generateHeader(items: any[], groupKey: string) {
     // Verificar se items não está vazio
+    const nanoidNumeric = customAlphabet('0123456789', 3);
+    const id = nanoidNumeric()
     if (!items || items.length === 0) {
       return {
         group: groupKey,
+        id: '',
         linhasPicking: 0,
         Caixas: 0,
         Unidades: 0,
@@ -35,6 +39,7 @@ export class SimpleHeaderStrategy implements HeaderStrategy {
     return {
       group: groupKey,
       linhasPicking: linhasPicking,
+      id: id,
       Caixas: caixas,
       Unidades: unidades,
       Pallets: pallets,
