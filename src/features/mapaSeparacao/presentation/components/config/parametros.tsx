@@ -58,9 +58,9 @@ export function ParametrosConfig({ config, setConfig }: Props) {
             <Layers className="w-4 h-4 text-blue-600 dark:text-blue-400" />
             Pallets Full em folhas separadas
           </Label>
-          <RadioGroup 
-            className="grid grid-cols-2 gap-2" 
-            value={config.palletsFull ? 'Sim' : 'Não'} 
+          <RadioGroup
+            className="grid grid-cols-2 gap-2"
+            value={config.palletsFull ? 'Sim' : 'Não'}
             onValueChange={(value) => handleUpdateBooleanProperty('palletsFull', value === 'Sim')}
           >
             <div className="flex items-center space-x-2 p-2 rounded hover:bg-muted/50 transition-colors">
@@ -82,9 +82,9 @@ export function ParametrosConfig({ config, setConfig }: Props) {
             <Package className="w-4 h-4 text-green-600 dark:text-green-400" />
             Unidades em folhas separadas
           </Label>
-          <RadioGroup 
-            className="grid grid-cols-2 gap-2" 
-            value={config.unidadesSeparadas ? 'Sim' : 'Não'} 
+          <RadioGroup
+            className="grid grid-cols-2 gap-2"
+            value={config.unidadesSeparadas ? 'Sim' : 'Não'}
             onValueChange={(value) => handleUpdateBooleanProperty('unidadesSeparadas', value === 'Sim')}
           >
             <div className="flex items-center space-x-2 p-2 rounded hover:bg-muted/50 transition-colors">
@@ -99,7 +99,28 @@ export function ParametrosConfig({ config, setConfig }: Props) {
         </div>
 
         <Separator />
-
+        {/* Informações do Cliente no Cabeçalho */}
+        <div className="space-y-3">
+          <Label className="text-base font-medium flex items-center gap-2">
+            <User className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+            Exibir info do cliente no cabeçalho
+          </Label>
+          <RadioGroup
+            className="grid grid-cols-2 gap-2"
+            value={config.infoClientHeader ? 'Sim' : 'Não'}
+            onValueChange={(value) => handleUpdateBooleanProperty('infoClientHeader', value === 'Sim')}
+          >
+            <div className="flex items-center space-x-2 p-2 rounded hover:bg-muted/50 transition-colors">
+              <RadioGroupItem value="Sim" id="sim-info-cliente" />
+              <Label htmlFor="sim-info-cliente" className="cursor-pointer text-sm">Sim</Label>
+            </div>
+            <div className="flex items-center space-x-2 p-2 rounded hover:bg-muted/50 transition-colors">
+              <RadioGroupItem value="Não" id="nao-info-cliente" />
+              <Label htmlFor="nao-info-cliente" className="cursor-pointer text-sm">Não</Label>
+            </div>
+          </RadioGroup>
+        </div>
+        <Separator />
         {/* Segregação FIFO */}
         <div className="space-y-3">
           <div className="flex items-center justify-between p-3 border rounded-lg bg-card hover:bg-muted/50 transition-colors">
@@ -107,9 +128,9 @@ export function ParametrosConfig({ config, setConfig }: Props) {
               <Clock className="w-4 h-4 text-orange-600 dark:text-orange-400" />
               <Label className="text-base font-medium cursor-pointer">Segregação FIFO</Label>
             </div>
-            <Switch 
-              checked={config.isSegregedFifo} 
-              onCheckedChange={(value) => handleUpdateBooleanProperty('isSegregedFifo', value)} 
+            <Switch
+              checked={config.isSegregedFifo}
+              onCheckedChange={(value) => handleUpdateBooleanProperty('isSegregedFifo', value)}
             />
           </div>
 
@@ -144,30 +165,12 @@ export function ParametrosConfig({ config, setConfig }: Props) {
             </div>
           )}
         </div>
-        
+
         <Separator />
 
-        {/* Informações do Cliente no Cabeçalho */}
-        <div className="space-y-3">
-          <Label className="text-base font-medium flex items-center gap-2">
-            <User className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
-            Exibir info do cliente no cabeçalho
-          </Label>
-          <RadioGroup
-            className="grid grid-cols-2 gap-2"
-            value={config.infoClientHeader ? 'Sim' : 'Não'}
-            onValueChange={(value) => handleUpdateBooleanProperty('infoClientHeader', value === 'Sim')}
-          >
-            <div className="flex items-center space-x-2 p-2 rounded hover:bg-muted/50 transition-colors">
-              <RadioGroupItem value="Sim" id="sim-info-cliente" />
-              <Label htmlFor="sim-info-cliente" className="cursor-pointer text-sm">Sim</Label>
-            </div>
-            <div className="flex items-center space-x-2 p-2 rounded hover:bg-muted/50 transition-colors">
-              <RadioGroupItem value="Não" id="nao-info-cliente" />
-              <Label htmlFor="nao-info-cliente" className="cursor-pointer text-sm">Não</Label>
-            </div>
-          </RadioGroup>
-        </div>
+
+
+
 
         <Separator />
 
@@ -178,9 +181,9 @@ export function ParametrosConfig({ config, setConfig }: Props) {
               <RefreshCw className="w-4 h-4 text-purple-600 dark:text-purple-400" />
               <Label className="text-base font-medium cursor-pointer">Conversão de Caixas</Label>
             </div>
-            <Switch 
-              checked={config.convertToPallet} 
-              onCheckedChange={(value) => handleUpdateBooleanProperty('convertToPallet', value)} 
+            <Switch
+              checked={config.convertToPallet}
+              onCheckedChange={(value) => handleUpdateBooleanProperty('convertToPallet', value)}
             />
           </div>
 

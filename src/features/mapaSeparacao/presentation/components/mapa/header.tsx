@@ -1,8 +1,10 @@
+'use client'
 import React from "react";
 import { FifoHeader } from './headers/fifoHeader';
 import { PalletFullHeader } from './headers/palletFullHeader';
 import { PickingHeader } from './headers/pickingHeader';
 import { UnidadeHeader } from './headers/unidadeHeader';
+import { useConfigPrintStore } from "../../store/configPrint";
 
 type HeaderProps = {
   header: {
@@ -30,6 +32,8 @@ type HeaderProps = {
 
 export const Header: React.FC<HeaderProps> = ({ header, caminho, type, index }) => {
 
+  const { config } = useConfigPrintStore();
+
   const tipo = caminho?.split(' > ').find(item => item.includes('tipo:'))?.replace('tipo:', '')
   const segmento = caminho?.split(' > ').find(item => item.includes('segmento:'))?.replace('segmento:', '')
   const empresa = caminho?.split(' > ').find(item => item.includes('empresa:'))?.replace('empresa:', '')
@@ -41,18 +45,18 @@ export const Header: React.FC<HeaderProps> = ({ header, caminho, type, index }) 
   }
   
   if (tipo?.toUpperCase().includes('0-PALLET')) {
-    return <PalletFullHeader header={header} caminho={caminho} type={type} index={index} />;
+    return <PalletFullHeader allInfoClient={config.infoClientHeader} header={header} caminho={caminho} type={type} index={index} />;
   }
   
   if (tipo?.toUpperCase().includes('PICKING')) {
-    return <PickingHeader infoQrCode={infoQrCode} header={header} caminho={caminho} type={type} index={index} />;
+    return <PickingHeader allInfoClient={config.infoClientHeader} infoQrCode={infoQrCode} header={header} caminho={caminho} type={type} index={index} />;
   }
   
   if (tipo?.toUpperCase().includes('3-UNIDADES')) {
-    return <UnidadeHeader infoQrCode={infoQrCode} header={header} caminho={caminho} type={type} index={index} />;
+    return <UnidadeHeader allInfoClient={config.infoClientHeader} infoQrCode={infoQrCode} header={header} caminho={caminho} type={type} index={index} />;
   }
 
   // Se não corresponder a nenhum tipo específico, usar o header padrão (picking)
-  return <PickingHeader infoQrCode={infoQrCode} header={header} caminho={caminho} type={type} index={index} />;
+  return <PickingHeader allInfoClient={config.infoClientHeader} infoQrCode={infoQrCode} header={header} caminho={caminho} type={type} index={index} />;
 };
 

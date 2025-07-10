@@ -33,6 +33,7 @@ type PickingHeaderProps = {
   type: 'transport' | 'customerCode';
   caminho?: string;
   index?: number;
+  allInfoClient: boolean;
 };
 
 const summaryFields = [
@@ -43,7 +44,7 @@ const summaryFields = [
   { key: "id", label: "ID", icon: Hash },
 ];
 
-export const PickingHeader: React.FC<PickingHeaderProps> = ({ header, infoQrCode, caminho, type, index }) => {
+export const PickingHeader: React.FC<PickingHeaderProps> = ({ header, infoQrCode, caminho, type, index, allInfoClient}) => {
   const empresa = caminho?.split(' > ').find(item => item.includes('empresa:'))?.replace('empresa:', '')
   const segmento = caminho?.split(' > ').find(item => item.includes('segmento:'))?.replace('segmento:', '')
   const tipo = caminho?.split(' > ').find(item => item.includes('tipo:'))?.replace('tipo:', '')
@@ -104,7 +105,7 @@ export const PickingHeader: React.FC<PickingHeaderProps> = ({ header, infoQrCode
               <Hash size={12} />
               <p>Seq.: {header?.sequencia}</p>
             </div>
-            {(type === 'customerCode' || transporte?.toUpperCase().includes('SEGREGADO')) && (
+            {(type === 'customerCode' || transporte?.toUpperCase().includes('SEGREGADO') || allInfoClient) && (
               <>
                 <div className="flex items-center gap-1">
                   <User size={12} />
