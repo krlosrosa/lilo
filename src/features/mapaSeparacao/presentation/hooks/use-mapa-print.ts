@@ -52,7 +52,10 @@ export const useMapaPrint = (options: {
   let pageStyle = `
     @page {
       size: A4;
-      margin: 10mm;
+      margin-top: 20mm;
+      margin-bottom: 20mm;
+      margin-left: 5mm;
+      margin-right: 5mm;
 
       /* Força o conteúdo das áreas de cabeçalho a ser vazio, removendo o padrão do navegador */
       @top-center { content: ""; }
