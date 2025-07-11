@@ -20,6 +20,8 @@ import { useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import PrintProtocol from "../components/print-protocol";
+import { GenerateProtocol } from "../../domain/generate-protocol";
 
 export interface FilesState {
   products: File | null;
@@ -31,9 +33,10 @@ type UploadPage = {
   validateProducts: ValidateProducts;
   validateRoutes: ValidateTransport;
   generateMap: GenerateMap;
+  generateProtocol: GenerateProtocol;
 }
 
-export default function MapaSeparacao({ validateProducts, validateRoutes, generateMap }: UploadPage) {
+export default function MapaSeparacao({ validateProducts, validateRoutes, generateMap, generateProtocol }: UploadPage) {
   const router = useRouter();
   const { setValidateProducts, setValidateRoutes,  validateProducts: validateProductsStore, setMapData, setProductData } = useDataStore();
   const { config, setConfigCompat } = useConfigPrintStore();
@@ -265,15 +268,8 @@ export default function MapaSeparacao({ validateProducts, validateRoutes, genera
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex flex-col sm:flex-row gap-3">
-                <Button
-                  onClick={() => router.push('/ressuprimento')}
-                  variant="outline"
-                  className="flex-1"
-                >
-                  <Package className="w-4 h-4 mr-2" />
-                  Resuprimento
-                </Button>
+              <div className="flex flex-col sm:flex-row gap-3 w-full">
+                <PrintProtocol generateProtocol={generateProtocol} shipmentItems={shipment} />
                 <Button
                   onClick={() => setTab('configuracao')}
                   variant="outline"
