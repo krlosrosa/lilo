@@ -47,7 +47,7 @@ export const useMapaPrint = (options: {
 
   // 3. Estilos CSS aplicados apenas durante a impressão.
   // Define o layout da página (A4), margens e rodapé com número de página e data.
-  const transporteNome = transportes.length > 0 ? transportes[0] : '';
+  const transporteNome = '';
   
   let pageStyle = `
     @page {

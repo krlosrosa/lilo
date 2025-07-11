@@ -162,7 +162,7 @@ export default function MapaSeparacao({ validateProducts, validateRoutes, genera
       <Separator />
 
       <Tabs value={tab} onValueChange={setTab} className="space-y-4">
-        <TabsList hidden className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="upload" className="flex items-center gap-2">
             <UploadIcon className="w-4 h-4" />
             <span className="hidden sm:inline">Upload</span>
@@ -179,6 +179,7 @@ export default function MapaSeparacao({ validateProducts, validateRoutes, genera
             <FileText className="w-4 h-4" />
             <span className="hidden sm:inline">Mapa</span>
           </TabsTrigger>
+          <TabsTrigger value="resumo">Resumo Header</TabsTrigger>
         </TabsList>
         <TabsContent value="upload" className="space-y-4">
           <Card>
@@ -343,6 +344,10 @@ export default function MapaSeparacao({ validateProducts, validateRoutes, genera
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="resumo">
+          {JSON.stringify(info)}
         </TabsContent>
       </Tabs>
     </div>
