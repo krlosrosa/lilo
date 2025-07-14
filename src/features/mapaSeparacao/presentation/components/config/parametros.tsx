@@ -103,7 +103,7 @@ export function ParametrosConfig({ config, setConfig }: Props) {
         <div className="space-y-3">
           <Label className="text-base font-medium flex items-center gap-2">
             <User className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
-            Exibir info do cliente no cabeçalho
+            Exibir info do 1° cliente do transporte no cabeçalho
           </Label>
           <RadioGroup
             className="grid grid-cols-2 gap-2"
@@ -119,6 +119,9 @@ export function ParametrosConfig({ config, setConfig }: Props) {
               <Label htmlFor="nao-info-cliente" className="cursor-pointer text-sm">Não</Label>
             </div>
           </RadioGroup>
+          <p className="text-xs text-muted-foreground"> 
+            Quando ativado irá exibir apenas o primeiro cliente dos transportes, não irá exibir a informação dos demais clientes contidos no mesmo transporte
+          </p>
         </div>
         <Separator />
         {/* Segregação FIFO */}
