@@ -2,6 +2,7 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import { Layers, Package } from "lucide-react";
 import { usePalletColumns, type ColumnConfig } from "@/features/mapaSeparacao/presentation/store/columsControlTable";
+import { formatNumberToBrazilian } from "../../../utils/formatNumber";
 
 type TablePalletProps = {
   data: any[];
@@ -72,6 +73,8 @@ export const TablePallet: React.FC<TablePalletProps> = ({ data, ariaLabel = "Tab
                     cellValue = String(cellValue).substring(0, 10);
                   } else if ((col.key === "dataMinima" || col.key === "dataMaxima" || col.key === "manufacturingDate") && cellValue) {
                     cellValue = formatDate(cellValue);
+                  } else if (["boxes", "units", "Pallets"].includes(col.key)) {
+                    cellValue = formatNumberToBrazilian(cellValue);
                   } else if (cellValue !== undefined && cellValue !== null && typeof cellValue === "object") {
                     cellValue = JSON.stringify(cellValue);
                   } else if (cellValue === undefined || cellValue === null) {

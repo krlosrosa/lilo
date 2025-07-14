@@ -2,6 +2,7 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import { Clock, ArrowRight } from "lucide-react";
 import { useFifoColumns, type ColumnConfig } from "@/features/mapaSeparacao/presentation/store/columsControlTable";
+import { formatNumberToBrazilian } from "../../../utils/formatNumber";
 
 type TableFifoProps = {
   data: any[];
@@ -78,6 +79,8 @@ export const TableFifo: React.FC<TableFifoProps> = ({ data, ariaLabel = "Tabela 
                     cellValue = String(cellValue).substring(0, 10);
                   } else if ((col.key === "dataMinima" || col.key === "dataMaxima" || col.key === "manufacturingDate") && cellValue) {
                     cellValue = formatDate(cellValue);
+                  } else if (["boxes", "units", "Pallets"].includes(col.key)) {
+                    cellValue = formatNumberToBrazilian(cellValue);
                   } else if (cellValue !== undefined && cellValue !== null && typeof cellValue === "object") {
                     cellValue = JSON.stringify(cellValue);
                   } else if (cellValue === undefined || cellValue === null) {

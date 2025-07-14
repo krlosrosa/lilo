@@ -15,6 +15,18 @@ const formatDate = (value: any) => {
   return date.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" });
 };
 
+const formatNumberToBrazilian = (value: any) => {
+  if (value === null || value === undefined) return "";
+  const num = Number(value);
+  if (isNaN(num)) {
+    return String(value);
+  }
+  return num.toLocaleString('pt-BR', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  });
+};
+
 export const TablePicking: React.FC<TablePickingProps> = ({ data, ariaLabel = "Tabela Picking" }) => {
   const visibleColumns = usePickingColumns();
   
@@ -74,6 +86,8 @@ export const TablePicking: React.FC<TablePickingProps> = ({ data, ariaLabel = "T
                     cellValue = String(cellValue).substring(0, 10);
                   } else if ((col.key === "dataMinima" || col.key === "dataMaxima" || col.key === "manufacturingDate") && cellValue) {
                     cellValue = formatDate(cellValue);
+                  } else if (["boxes", "units", "Pallets"].includes(col.key)) {
+                    cellValue = formatNumberToBrazilian(cellValue);
                   } else if (cellValue !== undefined && cellValue !== null && typeof cellValue === "object") {
                     cellValue = JSON.stringify(cellValue);
                   } else if (cellValue === undefined || cellValue === null) {
