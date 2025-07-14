@@ -2,6 +2,7 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import { ClipboardList, Package2 } from "lucide-react";
 import { usePickingColumns, type ColumnConfig } from "@/features/mapaSeparacao/presentation/store/columsControlTable";
+import { formatNumberToBrazilian } from "../../../utils/fomartNumber";
 
 type TablePickingProps = {
   data: any[];
@@ -13,18 +14,6 @@ const formatDate = (value: any) => {
   const date = new Date(value);
   if (isNaN(date.getTime())) return "";
   return date.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" });
-};
-
-const formatNumberToBrazilian = (value: any) => {
-  if (value === null || value === undefined) return "";
-  const num = Number(value);
-  if (isNaN(num)) {
-    return String(value);
-  }
-  return num.toLocaleString('pt-BR', {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 2,
-  });
 };
 
 export const TablePicking: React.FC<TablePickingProps> = ({ data, ariaLabel = "Tabela Picking" }) => {
