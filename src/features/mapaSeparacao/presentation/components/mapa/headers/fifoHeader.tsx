@@ -11,6 +11,7 @@ import {
   ArrowRight
 } from "lucide-react";
 import { QRCodeSVG } from 'qrcode.react';
+import { formatNumberToBrazilian } from "../../../utils/fomartNumber";
 
 type FifoHeaderProps = {
   header: {
@@ -42,7 +43,7 @@ const summaryFields = [
   { key: "id", label: "ID", icon: Hash },
 ];
 
-export const FifoHeader: React.FC<FifoHeaderProps> = ({ header, caminho, type, index }) => {
+export const FifoHeader: React.FC<FifoHeaderProps> = ({ header, caminho, type, index, infoQrCode }) => {
   const empresa = caminho?.split(' > ').find(item => item.includes('empresa:'))?.replace('empresa:', '')
   const segmento = caminho?.split(' > ').find(item => item.includes('segmento:'))?.replace('segmento:', '')
   const tipo = caminho?.split(' > ').find(item => item.includes('tipo:'))?.replace('tipo:', '')
@@ -134,7 +135,7 @@ export const FifoHeader: React.FC<FifoHeaderProps> = ({ header, caminho, type, i
                 <div key={key} className="flex items-center gap-1 text-sm">
                   <Icon className="w-2.5 h-2.5 text-orange-600" />
                   <span className="text-gray-600">{label}:</span>
-                  <span className="font-bold text-gray-800">{header[key]}</span>
+                  <span className="font-bold text-gray-800">{formatNumberToBrazilian(header[key])}</span>
                 </div>
               ) : null
             )}
@@ -161,7 +162,7 @@ export const FifoHeader: React.FC<FifoHeaderProps> = ({ header, caminho, type, i
           <div className="border-t border-gray-200 w-full mb-2"></div>
           
           {/* QR Code */}
-          <QRCodeSVG size={90} value="https://reactjs.org/" />
+          <QRCodeSVG size={90} value={infoQrCode} />
         </div>
       </div>
     </div>

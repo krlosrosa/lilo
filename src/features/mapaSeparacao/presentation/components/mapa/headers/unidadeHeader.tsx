@@ -11,6 +11,7 @@ import {
   PackageCheck
 } from "lucide-react";
 import { QRCodeSVG } from 'qrcode.react';
+import { formatNumberToBrazilian } from "../../../utils/fomartNumber";
 
 type UnidadeHeaderProps = {
   header: {
@@ -145,7 +146,7 @@ export const UnidadeHeader: React.FC<UnidadeHeaderProps> = ({ header, infoQrCode
                   <Icon className={`w-2.5 h-2.5 ${key === 'Unidades' ? 'text-purple-600' : 'text-gray-600'}`} />
                   <span className="text-gray-600">{label}:</span>
                   <span className={`font-bold ${key === 'Unidades' ? 'text-purple-800 text-lg' : 'text-gray-800'}`}>
-                    {header[key]}
+                    {formatNumberToBrazilian(header[key])}
                   </span>
                 </div>
               ) : null

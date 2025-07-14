@@ -2,7 +2,7 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import { Clock, ArrowRight } from "lucide-react";
 import { useFifoColumns, type ColumnConfig } from "@/features/mapaSeparacao/presentation/store/columsControlTable";
-import { formatNumberToBrazilian } from "../../../utils/formatNumber";
+import { formatNumberToBrazilian } from "../../../utils/fomartNumber";
 
 type TableFifoProps = {
   data: any[];

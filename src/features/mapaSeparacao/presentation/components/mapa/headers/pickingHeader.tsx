@@ -10,6 +10,7 @@ import {
   QrCode
 } from "lucide-react";
 import { QRCodeSVG } from 'qrcode.react';
+import { formatNumberToBrazilian } from "../../../utils/fomartNumber";
 
 type PickingHeaderProps = {
   header: {
@@ -137,7 +138,7 @@ export const PickingHeader: React.FC<PickingHeaderProps> = ({ header, infoQrCode
                 <div key={key} className="flex items-center gap-1 text-sm">
                   <Icon className="w-2.5 h-2.5 text-green-600" />
                   <span className="text-gray-600">{label}:</span>
-                  <span className="font-bold text-gray-800">{header[key]}</span>
+                  <span className="font-bold text-gray-800">{formatNumberToBrazilian(header[key])}</span>
                 </div>
               ) : null
             )}

@@ -2,7 +2,7 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import { Package2, Hash } from "lucide-react";
 import { useUnidadesColumns, type ColumnConfig } from "@/features/mapaSeparacao/presentation/store/columsControlTable";
-import { formatNumberToBrazilian } from "../../../utils/formatNumber";
+import { formatNumberToBrazilian } from "../../../utils/fomartNumber";
 
 type TableUnidadesProps = {
   data: any[];

@@ -10,6 +10,7 @@ import {
   Layers,
   Box
 } from "lucide-react";
+import { formatNumberToBrazilian } from "../../../utils/fomartNumber";
 
 type PalletFullHeaderProps = {
   header: {
@@ -31,6 +32,7 @@ type PalletFullHeaderProps = {
   caminho?: string;
   index?: number;
   allInfoClient: boolean;
+  infoQrCode: string;
 };
 
 const summaryFields = [
@@ -40,7 +42,7 @@ const summaryFields = [
   { key: "Pallets", label: "Pallets", icon: Layers },
 ];
 
-export const PalletFullHeader: React.FC<PalletFullHeaderProps> = ({ header, caminho, type, index, allInfoClient }) => {
+export const PalletFullHeader: React.FC<PalletFullHeaderProps> = ({ header, caminho, type, index, allInfoClient, infoQrCode }) => {
   const empresa = caminho?.split(' > ').find(item => item.includes('empresa:'))?.replace('empresa:', '')
   const segmento = caminho?.split(' > ').find(item => item.includes('segmento:'))?.replace('segmento:', '')
   const tipo = caminho?.split(' > ').find(item => item.includes('tipo:'))?.replace('tipo:', '')
@@ -158,7 +160,7 @@ export const PalletFullHeader: React.FC<PalletFullHeaderProps> = ({ header, cami
                   <Icon className={`w-2.5 h-2.5 ${key === 'Pallets' ? 'text-green-600' : 'text-gray-600'}`} />
                   <span className="text-gray-600">{label}:</span>
                   <span className={`font-bold ${key === 'Pallets' ? 'text-green-800 text-lg' : 'text-gray-800'}`}>
-                    {header[key]}
+                    {formatNumberToBrazilian(header[key])}
                   </span>
                 </div>
               ) : null

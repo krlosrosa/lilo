@@ -5,6 +5,7 @@ import { PalletFullHeader } from './headers/palletFullHeader';
 import { PickingHeader } from './headers/pickingHeader';
 import { UnidadeHeader } from './headers/unidadeHeader';
 import { useConfigPrintStore } from "../../store/configPrint";
+import { formatNumberToBrazilian } from "../../utils/fomartNumber";
 
 type HeaderProps = {
   header: {
@@ -37,7 +38,7 @@ export const Header: React.FC<HeaderProps> = ({ header, caminho, type, index }) 
   const tipo = caminho?.split(' > ').find(item => item.includes('tipo:'))?.replace('tipo:', '')
   const segmento = caminho?.split(' > ').find(item => item.includes('segmento:'))?.replace('segmento:', '')
   const empresa = caminho?.split(' > ').find(item => item.includes('empresa:'))?.replace('empresa:', '')
-  const infoQrCode = `${header.transporte};${header.id};${header.Caixas};${header.Unidades};${header.linhasPicking};${segmento};${empresa};SEPARACAO`
+  const infoQrCode = `${header.transporte};${header.id};${formatNumberToBrazilian(header.Caixas)};${formatNumberToBrazilian(header.Unidades)};${formatNumberToBrazilian(header.linhasPicking)};${segmento};${empresa};SEPARACAO`
 
   // Renderizar o header específico baseado no tipo
   if (tipo?.toUpperCase().includes('2-FIFO')) {
@@ -45,7 +46,7 @@ export const Header: React.FC<HeaderProps> = ({ header, caminho, type, index }) 
   }
   
   if (tipo?.toUpperCase().includes('0-PALLET')) {
-    return <PalletFullHeader allInfoClient={config.infoClientHeader} header={header} caminho={caminho} type={type} index={index} />;
+    return <PalletFullHeader allInfoClient={config.infoClientHeader} infoQrCode={infoQrCode} header={header} caminho={caminho} type={type} index={index} />;
   }
   
   if (tipo?.toUpperCase().includes('PICKING')) {

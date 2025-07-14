@@ -2,7 +2,7 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import { Layers, Package } from "lucide-react";
 import { usePalletColumns, type ColumnConfig } from "@/features/mapaSeparacao/presentation/store/columsControlTable";
-import { formatNumberToBrazilian } from "../../../utils/formatNumber";
+import { formatNumberToBrazilian } from "../../../utils/fomartNumber";
 
 type TablePalletProps = {
   data: any[];
