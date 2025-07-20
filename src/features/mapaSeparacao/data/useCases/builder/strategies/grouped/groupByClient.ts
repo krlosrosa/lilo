@@ -9,9 +9,9 @@ export class GroupByClient implements GroupStrategy {
     return groupBy(data, (item) => {
       const grupo = this.grupos?.find(g => g.items.includes(item.customerCode));
       if (!grupo) {
-        return `[${item.transport}]-${item.customerName}`;
+        return `transporte:[${item.transport}]-${item.customerCode}`;
       }
-      return `[${item.transport}]-${grupo.name}`;
+      return `transporte:[${item.transport}]-${grupo.name}`;
      });
   }
 }
