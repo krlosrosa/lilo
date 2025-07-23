@@ -20,11 +20,11 @@ export const Table: React.FC<TableProps> = ({ data, ariaLabel = "Tabela de dados
 
   // Renderizar a tabela específica baseada no tipo
   if (tipo?.toUpperCase().includes('2-FIFO')) {
-    return <TableFifo data={data} ariaLabel={ariaLabel} />;
+    return <TableFifo data={data} ariaLabel={ariaLabel} transporteAtual={transporteAtual} />;
   }
   
   if (tipo?.toUpperCase().includes('0-PALLET')) {
-    return <TablePallet data={data} ariaLabel={ariaLabel} />;
+    return <TablePallet data={data} ariaLabel={ariaLabel} transporteAtual={transporteAtual} />;
   }
   
   if (tipo?.toUpperCase().includes('PICKING')) {
@@ -32,7 +32,7 @@ export const Table: React.FC<TableProps> = ({ data, ariaLabel = "Tabela de dados
   }
   
   if (tipo?.toUpperCase().includes('3-UNIDADES')) {
-    return <TableUnidades data={data} ariaLabel={ariaLabel} />;
+    return <TableUnidades data={data} ariaLabel={ariaLabel} transporteAtual={transporteAtual} />;
   }
 
   // Se não corresponder a nenhum tipo específico, usar a tabela padrão (picking)

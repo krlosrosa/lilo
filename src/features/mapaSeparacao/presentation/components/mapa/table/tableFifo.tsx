@@ -7,6 +7,7 @@ import { formatNumberToBrazilian } from "../../../utils/fomartNumber";
 type TableFifoProps = {
   data: any[];
   ariaLabel?: string;
+  transporteAtual?: string;
 };
 
 const formatDate = (value: any) => {
@@ -16,7 +17,7 @@ const formatDate = (value: any) => {
   return date.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" });
 };
 
-export const TableFifo: React.FC<TableFifoProps> = ({ data, ariaLabel = "Tabela FIFO" }) => {
+export const TableFifo: React.FC<TableFifoProps> = ({ data, ariaLabel = "Tabela FIFO", transporteAtual }) => {
   const visibleColumns = useFifoColumns();
   
   if (!data || data.length === 0) {
@@ -37,6 +38,7 @@ export const TableFifo: React.FC<TableFifoProps> = ({ data, ariaLabel = "Tabela 
         role="table"
       >
         <thead className="bg-orange-100">
+        <tr><th>{transporteAtual}</th></tr>
           <tr>
             {visibleColumns.map((col: ColumnConfig) => (
               <th

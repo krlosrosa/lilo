@@ -162,7 +162,7 @@ export default function MapaSeparacao({ validateProducts, validateRoutes, genera
       <Separator />
 
       <Tabs value={tab} onValueChange={setTab} className="space-y-4">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList hidden={true} className="grid w-full grid-cols-4">
           <TabsTrigger value="upload" className="flex items-center gap-2">
             <UploadIcon className="w-4 h-4" />
             <span className="hidden sm:inline">Upload</span>

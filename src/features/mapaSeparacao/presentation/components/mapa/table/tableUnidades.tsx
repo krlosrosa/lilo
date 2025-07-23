@@ -7,6 +7,7 @@ import { formatNumberToBrazilian } from "../../../utils/fomartNumber";
 type TableUnidadesProps = {
   data: any[];
   ariaLabel?: string;
+  transporteAtual?: string;
 };
 
 const formatDate = (value: any) => {
@@ -16,7 +17,7 @@ const formatDate = (value: any) => {
   return date.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" });
 };
 
-export const TableUnidades: React.FC<TableUnidadesProps> = ({ data, ariaLabel = "Tabela Unidades" }) => {
+export const TableUnidades: React.FC<TableUnidadesProps> = ({ data, ariaLabel = "Tabela Unidades", transporteAtual }) => {
   const visibleColumns = useUnidadesColumns();
   
   if (!data || data.length === 0) {
@@ -37,6 +38,7 @@ export const TableUnidades: React.FC<TableUnidadesProps> = ({ data, ariaLabel = 
         role="table"
       >
         <thead className="bg-purple-100">
+        <tr><th>{transporteAtual}</th></tr>
           <tr>
             {visibleColumns.map((col: ColumnConfig) => (
               <th

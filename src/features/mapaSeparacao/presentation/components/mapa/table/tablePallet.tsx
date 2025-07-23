@@ -6,7 +6,8 @@ import { formatNumberToBrazilian } from "../../../utils/fomartNumber";
 
 type TablePalletProps = {
   data: any[];
-  ariaLabel?: string;
+  ariaLabel?: string; 
+  transporteAtual?: string;
 };
 
 const formatDate = (value: any) => {
@@ -16,7 +17,7 @@ const formatDate = (value: any) => {
   return date.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" });
 };
 
-export const TablePallet: React.FC<TablePalletProps> = ({ data, ariaLabel = "Tabela Pallets" }) => {
+export const TablePallet: React.FC<TablePalletProps> = ({ data, ariaLabel = "Tabela Pallets", transporteAtual }) => {
   const visibleColumns = usePalletColumns();
   
   if (!data || data.length === 0) {
@@ -31,6 +32,7 @@ export const TablePallet: React.FC<TablePalletProps> = ({ data, ariaLabel = "Tab
         role="table"
       >
         <thead className="bg-green-100">
+        <tr><th>{transporteAtual}</th></tr>
           <tr>
             {visibleColumns.map((col: ColumnConfig) => (
               <th
